@@ -18,6 +18,13 @@ import java.io.IOException;
 
 final class MyJSONParser implements JSONParser {
 
+  /**
+   * Given a string that should be a valid JSON-lite object encoded as a String
+   * return the parsed object. If for any reason the String is found to be
+   * invalid, the method should throw an IOException.
+   * 
+   * @param in the String representation of a valid JSON-lite object
+   */
   @Override
   public JSON parse(String in) throws IOException {
     // TODO: implement this
