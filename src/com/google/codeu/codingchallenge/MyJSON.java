@@ -15,8 +15,14 @@
 package com.google.codeu.codingchallenge;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 final class MyJSON implements JSON {
+	private HashMap<String, Object> hm;
+	
+	public MyJSON(HashMap<String, Object> hm) { 
+		this.hm = hm; 
+	}
 
   /**
    * Gets the value of the nested object with the given name. If there is
@@ -63,8 +69,8 @@ final class MyJSON implements JSON {
   
   /**
    * Sets the String that should be stored under the given name. Any old value
-   * should be overwritten. This method will always return a reference to
-   * "this".
+   * should be overwritten. This method will always return a reference to the
+   * altered JSON object
    * 
    *  @param name the name of desired JSON object
    *  @param value the new String value of the JSON object

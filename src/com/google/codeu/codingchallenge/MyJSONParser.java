@@ -15,6 +15,7 @@
 package com.google.codeu.codingchallenge;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 final class MyJSONParser implements JSONParser {
 
@@ -27,7 +28,54 @@ final class MyJSONParser implements JSONParser {
    */
   @Override
   public JSON parse(String in) throws IOException {
-    // TODO: implement this
-    return new MyJSON();
+	in = in.replaceAll("\\s+", "");
+	if(in.length() < 1)
+		throw new IOException(); 
+    if(in.charAt(0) != '{' || in.charAt(in.length() - 1) != '}')
+    	throw new IOException();
+    in = in.substring(1,in.length() - 1);
+    String[] parts = in.split(",");
+    String key, value;
+    HashMap<String,Object> hm = new HashMap<String,Object>(parts.length);
+    for(int i = 0; i < parts.length; i++){
+    	key = parts[i].substring(0, parts[i].indexOf(":"));
+    	value = parts[i].substring(parts[i].indexOf(':')  + 1);
+    	if(!isValidString(key))
+    		throw new IOException();
+    	if(isValidString(value))
+    		hm.put(key, value);
+    	else
+    		hm.put(key, parse(value));
+    }
+    MyJSON mj = new MyJSON(hm); 
+    return mj;
+  }
+  
+  private boolean isValidString(String s) { 
+	  if(s.length() < 1)
+		  return false;
+	  if(!(s.charAt(0) == '"') || !(s.charAt(s.length() - 1) == '"'))
+		  return false;
+	  if(s.contains("\\")) { 
+		  char escChar = s.charAt(s.indexOf('\\') + 1); 
+		  if(escChar != '\\' && escChar != 't' && escChar != 'n' && escChar != '\"') { 
+			  return false; 
+		  } else { 
+			  return isValidString("\"" + s.substring(s.indexOf('\\') + 2));
+		  }
+	  }
+	  if(s.substring(1, s.length() - 1).contains("\"")) {
+		  try {  
+			  char backslash = s.substring(1, s.length() - 1).charAt(s.indexOf('"') - 1);
+			  if(backslash != '\\')
+				  return false;
+			  else { 
+				  return isValidString("\"" + s.substring(s.indexOf('"') + 1));
+			  }
+		  } catch(IndexOutOfBoundsException e) {
+			  return false; 
+		  }
+	  }
+	  return true;
   }
 }
