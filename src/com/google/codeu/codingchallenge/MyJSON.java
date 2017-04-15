@@ -23,6 +23,10 @@ final class MyJSON implements JSON {
 	public MyJSON(HashMap<String, Object> hm) { 
 		this.hm = hm; 
 	}
+	
+	public MyJSON() {
+		this.hm = new HashMap<String,Object>();
+	}
 
   /**
    * Gets the value of the nested object with the given name. If there is
@@ -34,8 +38,9 @@ final class MyJSON implements JSON {
    */
   @Override
   public JSON getObject(String name) {
-    // TODO: implement
-    return null;
+	  if(this.hm.get(name).equals(null) || this.hm.get(name) instanceof String) 
+		  return null;
+      return (JSON)this.hm.get(name);		
   }
 
   /**
@@ -46,12 +51,11 @@ final class MyJSON implements JSON {
    * @param name the name of desired JSON object
    * @param value new value of the of the designated JSON object 
    * @return reference to the modified JSON object
-   * If no such object exists, returns null
    */
   @Override
   public JSON setObject(String name, JSON value) {
-    // TODO: implement
-    return this;
+	  this.hm.put(name, value);
+	  return this;
   }
 
   /**
@@ -63,8 +67,10 @@ final class MyJSON implements JSON {
    */
   @Override
   public String getString(String name) {
-    // TODO: implement this
-    return null;
+	  if(this.hm.get(name) instanceof HashMap) { 
+		  return null;
+	  } else 
+		  return (String)this.hm.get(name);
   }
   
   /**
@@ -78,7 +84,7 @@ final class MyJSON implements JSON {
    */
   @Override
   public JSON setString(String name, String value) {
-    // TODO: implement this
+    this.hm.put(name, value);
     return this;
   }
 
@@ -89,7 +95,7 @@ final class MyJSON implements JSON {
    */
   @Override
   public void getObjects(Collection<String> names) {
-    // TODO: implement this
+	  
   }
   
   /**
@@ -99,6 +105,6 @@ final class MyJSON implements JSON {
    */
   @Override
   public void getStrings(Collection<String> names) {
-    // TODO: implement this
+//	  names = this.hm.values();
   }
 }

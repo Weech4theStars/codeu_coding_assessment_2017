@@ -18,10 +18,12 @@ import java.io.IOException;
 
 interface JSONParser {
 
-  // PARSE
-  //
-  // Given a string that should be a valid JSON-lite object encoded as a string
-  // return the parsed object. If for any reason the string is found to be
-  // invalid, the method should throw an IOException.
+ /**
+   * Given a string that should be a valid JSON-lite object encoded as a String
+   * return the parsed object. If for any reason the String is found to be
+   * invalid, the method should throw an IOException.
+   * 
+   * @param in the String representation of a valid JSON-lite object
+   */
   JSON parse(String object) throws IOException;
 }
