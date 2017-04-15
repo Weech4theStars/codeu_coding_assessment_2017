@@ -37,18 +37,28 @@ final class MyJSONParser implements JSONParser {
     String[] parts = in.split(",");
     String key, value;
     HashMap<String,Object> hm = new HashMap<String,Object>(parts.length);
+    if(in.length() < 1)
+    	return new MyJSON(hm);
     for(int i = 0; i < parts.length; i++){
-    	key = parts[i].substring(0, parts[i].indexOf(":"));
-    	value = parts[i].substring(parts[i].indexOf(':')  + 1);
-    	if(!isValidString(key))
+    	try {
+    		key = parts[i].substring(0, parts[i].indexOf(":"));
+    		value = parts[i].substring(parts[i].indexOf(':')  + 1);
+    		if(!isValidString(key))
+    			throw new IOException();
+    		if(isValidString(value)) {
+    			key = key.substring(1, key.length() - 1);
+    			value = value.substring(1, value.length() - 1);
+    			hm.put(key, value);
+    		} else {
+    			key = key.substring(1, key.length() - 1);
+    			hm.put(key, parse(value));
+    		}
+    		
+    	} catch(IndexOutOfBoundsException e) { 
     		throw new IOException();
-    	if(isValidString(value))
-    		hm.put(key, value);
-    	else
-    		hm.put(key, parse(value));
+    	}
     }
-    MyJSON mj = new MyJSON(hm); 
-    return mj;
+    return new MyJSON(hm); 
   }
   
   private boolean isValidString(String s) { 
