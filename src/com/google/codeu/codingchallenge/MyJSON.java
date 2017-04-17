@@ -16,6 +16,7 @@ package com.google.codeu.codingchallenge;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 final class MyJSON implements JSON {
 	private HashMap<String, Object> hm;
@@ -28,14 +29,6 @@ final class MyJSON implements JSON {
 		this.hm = new HashMap<String,Object>();
 	}
 
-  /**
-   * Gets the value of the nested object with the given name. If there is
-   * no nested object with that name, the method will return null.
-   * 
-   * @param name the name of desired JSON object
-   * @return the JSON object with the given name. 
-   * If no such object exists, returns null
-   */
   @Override
   public JSON getObject(String name) {
 	  if(this.hm.get(name) instanceof String) 
@@ -43,68 +36,46 @@ final class MyJSON implements JSON {
       return (JSON)this.hm.get(name);		
   }
 
-  /**
-   * Sets the value of the nested object with the given name. Any old value
-   * should be overwritten. This method will always return a reference to the 
-   * MyJSON object
-   * 
-   * @param name the name of desired JSON object
-   * @param value new value of the of the designated JSON object 
-   * @return reference to the modified JSON object
-   */
   @Override
   public JSON setObject(String name, JSON value) {
 	  this.hm.put(name, value);
 	  return this;
   }
 
-  /**
-   * Gets the String value within this JSON object that has the given name. if
-   * there is no String with the given name, the method will return null.
-   * 
-   * @param name the name of desired JSON object
-   * @return the String value within the JSON object
-   */
   @Override
   public String getString(String name) {
-	  if(this.hm.get(name) instanceof HashMap) { 
+	  if(!(this.hm.get(name) instanceof String)) { 
 		  return null;
 	  } else 
 		  return (String)this.hm.get(name);
   }
   
-  /**
-   * Sets the String that should be stored under the given name. Any old value
-   * should be overwritten. This method will always return a reference to the
-   * altered JSON object
-   * 
-   *  @param name the name of desired JSON object
-   *  @param value the new String value of the JSON object
-   *  @return a reference to the JSON object
-   */
   @Override
   public JSON setString(String name, String value) {
     this.hm.put(name, value);
     return this;
   }
 
-  /**
-   * Copies the names of all object values to the given collection.
-   * 
-   * @param names the String Collection to save the names of the object values to 
-   */
   @Override
   public void getObjects(Collection<String> names) {
+	  Object[] keys = hm.keySet().toArray();
+	  String key;
+	  for(int i = 0; i < keys.length; i++){
+		  key = (String)keys[i];
+		  if(hm.get(key) instanceof String)
+			  names.add((String)hm.get(key));
+	  }
 	  
   }
   
-  /**
-   * Copies the names of all String values to the given collection.
-   * 
-   * @param names the String Collection to save all the names of the String values to
-   */
   @Override
   public void getStrings(Collection<String> names) {
-//	  names = this.hm.values();
+	  Object[] keys = hm.keySet().toArray();
+	  String key;
+	  for(int i = 0; i < keys.length; i++){
+		  key = (String)keys[i];
+		  if(!(hm.get(key) instanceof String))
+			  names.add((String)hm.get(key));
+	  }
   }
 }

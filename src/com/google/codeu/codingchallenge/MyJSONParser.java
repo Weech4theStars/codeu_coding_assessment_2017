@@ -36,8 +36,8 @@ final class MyJSONParser implements JSONParser {
     in = in.substring(1,in.length() - 1);
     String part1, part2;
     if(in.contains("{")){
-    	part1 = in.substring(0,in.indexOf("{"));
-    	part2 = in.substring(in.indexOf("{"));
+    	part1 = in.substring(0,in.indexOf("{")).trim();
+    	part2 = in.substring(in.indexOf("{")).trim();
     } else {
     	part1 = in;
     	part2 = null;
@@ -68,6 +68,8 @@ final class MyJSONParser implements JSONParser {
     		throw new IOException(); 
     	if(part2 != null) {
     		key = key.substring(1, key.length() - 1);
+    		if(part2.charAt(part2.length() - 1) != '}')
+    			part2 = (part2 + "}").trim();
     		hm.put(key, parse(part2));
     	} else {
     		value = parts[len].substring(parts[len].indexOf(':') + 1).trim();
