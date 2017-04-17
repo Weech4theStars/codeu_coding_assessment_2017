@@ -73,23 +73,32 @@ final class TestMain {
           String test = "{ \"name\":{\"first\":\"sam\", \"last\":\"doe\" },"
         		  		+ "\"test\":{\"blah\":\"blahblah\"},"
         		  		+ "\"test2\": \"blah\"}";
-//          System.out.println(test);
+
           final JSON obj = parser.parse(test);
           final JSON nameObj = obj.getObject("name");
-
+          
           Asserts.isNotNull(nameObj);
           Asserts.isEqual("sam", nameObj.getString("first"));
           Asserts.isEqual("doe", nameObj.getString("last"));
+          
+          final JSON nameObj2 = obj.getObject("test");
+          
+          Asserts.isNotNull(nameObj2);
+          Asserts.isEqual("blahblah", nameObj2.getString("blah"));
+          
+          Asserts.isEqual("blah", obj.getString("test2"));
 
-//          final Collection<String> strings = new HashSet<>();
-//          obj.getStrings(strings);
-//
-//          Asserts.isEqual(strings.size(), 0);
-//
-//          final Collection<String> objects = new HashSet<>();
-//          obj.getObjects(objects);
-//
-//          Asserts.isEqual(objects.size(), 0);
+
+
+          final Collection<String> strings = new HashSet<>();
+          obj.getStrings(strings);
+
+          Asserts.isEqual(strings.size(), 1);
+
+          final Collection<String> objects = new HashSet<>();
+          obj.getObjects(objects);
+
+          Asserts.isEqual(objects.size(), 2);
         }
       });
 

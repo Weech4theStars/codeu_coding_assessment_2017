@@ -16,6 +16,7 @@ package com.google.codeu.codingchallenge;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 final class MyJSON implements JSON {
@@ -58,24 +59,27 @@ final class MyJSON implements JSON {
 
   @Override
   public void getObjects(Collection<String> names) {
-	  Object[] keys = hm.keySet().toArray();
+	  Set<String> keys = hm.keySet();
+	  Iterator iter = keys.iterator();
 	  String key;
-	  for(int i = 0; i < keys.length; i++){
-		  key = (String)keys[i];
-		  if(hm.get(key) instanceof String)
-			  names.add((String)hm.get(key));
+	  while(iter.hasNext()) {
+		  key = (String) iter.next();
+		  if(!(hm.get(key) instanceof String)) {
+			 names.add(key); 
+		  }
 	  }
-	  
   }
   
   @Override
   public void getStrings(Collection<String> names) {
-	  Object[] keys = hm.keySet().toArray();
+	  Set<String> keys = hm.keySet();
+	  Iterator iter = keys.iterator();
 	  String key;
-	  for(int i = 0; i < keys.length; i++){
-		  key = (String)keys[i];
-		  if(!(hm.get(key) instanceof String))
-			  names.add((String)hm.get(key));
+	  while(iter.hasNext()) {
+		  key = (String) iter.next();
+		  if(hm.get(key) instanceof String) {
+			 names.add(key); 
+		  }
 	  }
   }
 }
