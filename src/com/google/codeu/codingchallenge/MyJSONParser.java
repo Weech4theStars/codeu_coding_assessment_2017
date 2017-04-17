@@ -40,19 +40,15 @@ final class MyJSONParser implements JSONParser {
     	while(in.length() > 1) {
     		key = in.substring(0, in.indexOf(":")).trim();
     		value = in.substring(in.indexOf(":") + 1).trim();
-    		System.out.println("initial key: " + key);
-    		System.out.println("initial value: " + value);
     		if(!isValidString(key))
     			throw new IOException();
     		if(value.contains("{")){
     			value = value.substring(0,value.indexOf("}") + 1).trim();
-    			System.out.println("new JSON object: " + value);
     			key = key.substring(1, key.length() - 1);
-    			if(in.indexOf("}") == in.length() - 1) //not sure if need
+    			if(in.indexOf("}") == in.length() - 1)
     				in = "";
     			else 
-    				in = in.substring(in.indexOf("}" + 2));
-    			System.out.println("new input after parsing JSON object: " + in);
+    				in = in.substring(in.indexOf("}") + 2);
     			hm.put(key, parse(value));
     		} else {
     			if(value.contains(",")) {
