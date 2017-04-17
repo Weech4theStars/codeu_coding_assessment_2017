@@ -33,58 +33,51 @@ final class MyJSONParser implements JSONParser {
 		throw new IOException(); 
     if(in.charAt(0) != '{' || in.charAt(in.length() - 1) != '}')
     	throw new IOException();
-    in = in.substring(1,in.length() - 1);
-    String part1, part2;
-    if(in.contains("{")){
-    	part1 = in.substring(0,in.indexOf("{")).trim();
-    	part2 = in.substring(in.indexOf("{")).trim();
-    } else {
-    	part1 = in;
-    	part2 = null;
-    }
-    
-    String[] parts = part1.split(",");
+    in = in.substring(1,in.length() - 1).trim();
     String key, value;
-    HashMap<String,Object> hm = new HashMap<String,Object>(parts.length);
-    if(in.length() <= 1)
-    	return new MyJSON();
-    try {
-    	for(int i = 0; i < parts.length - 1; i++){   	
-    		key = parts[i].substring(0, parts[i].indexOf(":")).trim();
-    		value = parts[i].substring(parts[i].indexOf(':')  + 1).trim();
-//    		System.out.println("in for loop, key: " + key + ", value: " + value);
+    HashMap<String,Object> hm = new HashMap<String,Object>();
+    try { 
+    	while(in.length() > 1) {
+    		key = in.substring(0, in.indexOf(":")).trim();
+    		value = in.substring(in.indexOf(":") + 1).trim();
+    		System.out.println("initial key: " + key);
+    		System.out.println("initial value: " + value);
     		if(!isValidString(key))
     			throw new IOException();
-    		if(isValidString(value)) {
+    		if(value.contains("{")){
+    			value = value.substring(0,value.indexOf("}") + 1).trim();
+    			System.out.println("new JSON object: " + value);
     			key = key.substring(1, key.length() - 1);
-    			value = value.substring(1, value.length() - 1);
-    			hm.put(key, value);    		
+    			if(in.indexOf("}") == in.length() - 1) //not sure if need
+    				in = "";
+    			else 
+    				in = in.substring(in.indexOf("}" + 2));
+    			System.out.println("new input after parsing JSON object: " + in);
+    			hm.put(key, parse(value));
+    		} else {
+    			if(value.contains(",")) {
+    				value = value.substring(0, value.indexOf(","));
+    				in = in.substring(in.indexOf(",") + 1);
+    				if(isValidString(value)) {
+    					key = key.substring(1, key.length() - 1);
+    					value = value.substring(1, value.length() - 1);
+    					hm.put(key, value);
+    				} else
+    					throw new IOException(); 
+    			} else {
+    				if(isValidString(value)) {
+    					key = key.substring(1, key.length() - 1);
+    					value = value.substring(1, value.length() - 1);
+    					hm.put(key, value);
+    					in = "";
+    				} else
+    					throw new IOException();
+    			}	
     		}
     	}
-    	int len = parts.length - 1;
-    	key = parts[len].substring(0, parts[len].indexOf(":")).trim();
-//    	System.out.println("final value of key: " + key);
-    	if(!isValidString(key))
-    		throw new IOException(); 
-    	if(part2 != null) {
-    		key = key.substring(1, key.length() - 1);
-    		if(part2.charAt(part2.length() - 1) != '}')
-    			part2 = (part2 + "}").trim();
-    		hm.put(key, parse(part2));
-    	} else {
-    		value = parts[len].substring(parts[len].indexOf(':') + 1).trim();
-//    		System.out.println(value);
-//    		System.out.println(isValidString(value));
-    		if(isValidString(value)) {
-    			key = key.substring(1, key.length() - 1);
-    			value = value.substring(1, value.length() - 1);
-    			hm.put(key, value);
-    		} else
-    			throw new IOException();
-    	}
-    } catch(IndexOutOfBoundsException e) { 
-		throw new IOException();
-	}
+    } catch(IndexOutOfBoundsException e) {
+    	throw new IOException();
+    }
     return new MyJSON(hm); 
   }
   
