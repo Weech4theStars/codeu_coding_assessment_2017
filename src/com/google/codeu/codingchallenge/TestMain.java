@@ -66,7 +66,7 @@ final class TestMain {
       }
     });
     
-    tests.add("Multiple JSON value mappings", new Test() {
+    tests.add("Multiple JSON Object Mappings", new Test() {
         @Override
         public void run(JSONFactory factory) throws Exception {
           final JSONParser parser = factory.parser();
@@ -101,6 +101,53 @@ final class TestMain {
           Asserts.isEqual(objects.size(), 2);
         }
       });
+    
+    tests.add("Multiple JSON Object Mappings, Different Order", new Test() {
+        @Override
+        public void run(JSONFactory factory) throws Exception {
+          final JSONParser parser = factory.parser();
+          String test = "{ \"name\":\"john doe\","
+        		  		+ "\"name2\": \"jane doe\","
+        		  		+ "\"test\": {\"blah\": \"blahblah\"}}";
+
+          final JSON obj = parser.parse(test);
+          final JSON nameObj = obj.getObject("test");
+          
+          Asserts.isNotNull(nameObj);
+          Asserts.isEqual("blahblah", nameObj.getString("blah"));
+          
+          final String nameString = obj.getString("name2");
+          
+          Asserts.isEqual(nameString, "jane doe");
+
+        }
+      });
+    
+    tests.add("Excess Whitespace", new Test() {
+        @Override
+        public void run(JSONFactory factory) throws Exception {
+
+          final JSONParser parser = factory.parser();
+          final JSON obj = parser.parse("   {      \"name   \"  :    {  \"first\"  :  \"sam\","
+        		  						+ "\"last\":    \"doe\"  }  }");
+
+          final JSON nameObj = obj.getObject("name   ");
+
+          Asserts.isNotNull(nameObj);
+          Asserts.isEqual("sam", nameObj.getString("first"));
+          Asserts.isEqual("doe", nameObj.getString("last"));
+        }
+      });
+    
+//    tests.add("Improperly Escaped Character", new Test() {
+//        @Override
+//        public void run(JSONFactory factory) throws Exception {
+//
+//          final JSONParser parser = factory.parser();
+//          
+//          final JSON obj = parser.parse("{ \"na\\me\":{\"first\":\"sam\", \"last\":\"doe\" } }");
+//        }
+//      });
 
     tests.run(new JSONFactory(){
       @Override

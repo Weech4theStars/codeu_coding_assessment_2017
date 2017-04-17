@@ -60,10 +60,10 @@ final class MyJSON implements JSON {
   @Override
   public void getObjects(Collection<String> names) {
 	  Set<String> keys = hm.keySet();
-	  Iterator iter = keys.iterator();
+	  Iterator<String> iter = keys.iterator();
 	  String key;
 	  while(iter.hasNext()) {
-		  key = (String) iter.next();
+		  key = iter.next();
 		  if(!(hm.get(key) instanceof String)) {
 			 names.add(key); 
 		  }
@@ -73,10 +73,10 @@ final class MyJSON implements JSON {
   @Override
   public void getStrings(Collection<String> names) {
 	  Set<String> keys = hm.keySet();
-	  Iterator iter = keys.iterator();
+	  Iterator<String> iter = keys.iterator();
 	  String key;
 	  while(iter.hasNext()) {
-		  key = (String) iter.next();
+		  key = iter.next();
 		  if(hm.get(key) instanceof String) {
 			 names.add(key); 
 		  }
