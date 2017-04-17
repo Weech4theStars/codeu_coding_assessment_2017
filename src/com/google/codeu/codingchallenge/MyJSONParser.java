@@ -77,6 +77,7 @@ final class MyJSONParser implements JSONParser {
         				in = in.substring(in.indexOf("}") + 2);
         			hm.put(key, parse(value));
     			}
+    			
     		//if the JSON object is the only remaining key:value to be mapped
     		} else if(in.contains("{")) {
     			value = value.substring(0,value.indexOf("}") + 1).trim();

@@ -14,6 +14,7 @@
 
 package com.google.codeu.codingchallenge;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -88,8 +89,6 @@ final class TestMain {
           
           Asserts.isEqual("blah", obj.getString("test2"));
 
-
-
           final Collection<String> strings = new HashSet<>();
           obj.getStrings(strings);
 
@@ -119,6 +118,16 @@ final class TestMain {
           final String nameString = obj.getString("name2");
           
           Asserts.isEqual(nameString, "jane doe");
+          
+          final Collection<String> strings = new HashSet<>();
+          obj.getStrings(strings);
+
+          Asserts.isEqual(strings.size(), 2);
+
+          final Collection<String> objects = new HashSet<>();
+          obj.getObjects(objects);
+
+          Asserts.isEqual(objects.size(), 1);
 
         }
       });
@@ -138,6 +147,9 @@ final class TestMain {
           Asserts.isEqual("doe", nameObj.getString("last"));
         }
       });
+
+// would like to test that certain errors are thrown, but am uncertain how to do that within the 
+// provided Test.java framework
     
 //    tests.add("Improperly Escaped Character", new Test() {
 //        @Override
@@ -145,8 +157,13 @@ final class TestMain {
 //
 //          final JSONParser parser = factory.parser();
 //          
-//          final JSON obj = parser.parse("{ \"na\\me\":{\"first\":\"sam\", \"last\":\"doe\" } }");
-//        }
+//          try {
+//        	  final JSON obj = parser.parse("{ \"na\\me\":{\"first\":\"sam\", \"last\":\"doe\" } }");
+//          } catch(IOException e) {
+//        	 Asserts.isEqual(e, "key is not a valid  JSON-lite String");
+//          }
+//        
+//         }
 //      });
 
     tests.run(new JSONFactory(){
