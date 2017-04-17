@@ -28,36 +28,61 @@ final class MyJSONParser implements JSONParser {
    */
   @Override
   public JSON parse(String in) throws IOException {
-	in = in.replaceAll("\\s+", "");
+	in = in.trim();
 	if(in.length() < 1)
 		throw new IOException(); 
     if(in.charAt(0) != '{' || in.charAt(in.length() - 1) != '}')
     	throw new IOException();
     in = in.substring(1,in.length() - 1);
-    String[] parts = in.split(",");
+    String part1, part2;
+    if(in.contains("{")){
+    	part1 = in.substring(0,in.indexOf("{"));
+    	part2 = in.substring(in.indexOf("{"));
+    } else {
+    	part1 = in;
+    	part2 = null;
+    }
+    
+    String[] parts = part1.split(",");
     String key, value;
     HashMap<String,Object> hm = new HashMap<String,Object>(parts.length);
-    if(in.length() < 1)
-    	return new MyJSON(hm);
-    for(int i = 0; i < parts.length; i++){
-    	try {
-    		key = parts[i].substring(0, parts[i].indexOf(":"));
-    		value = parts[i].substring(parts[i].indexOf(':')  + 1);
+    if(in.length() <= 1)
+    	return new MyJSON();
+    try {
+    	for(int i = 0; i < parts.length - 1; i++){   	
+    		key = parts[i].substring(0, parts[i].indexOf(":")).trim();
+    		value = parts[i].substring(parts[i].indexOf(':')  + 1).trim();
+//    		System.out.println("in for loop, key: " + key + ", value: " + value);
     		if(!isValidString(key))
     			throw new IOException();
     		if(isValidString(value)) {
     			key = key.substring(1, key.length() - 1);
     			value = value.substring(1, value.length() - 1);
-    			hm.put(key, value);
-    		} else {
-    			key = key.substring(1, key.length() - 1);
-    			hm.put(key, parse(value));
+    			hm.put(key, value);    		
     		}
-    		
-    	} catch(IndexOutOfBoundsException e) { 
-    		throw new IOException();
     	}
-    }
+    	int len = parts.length - 1;
+    	key = parts[len].substring(0, parts[len].indexOf(":")).trim();
+//    	System.out.println("final value of key: " + key);
+    	if(!isValidString(key))
+    		throw new IOException(); 
+    	if(part2 != null) {
+    		key = key.substring(1, key.length() - 1);
+    		hm.put(key, parse(part2));
+    	} else {
+    		value = parts[len].substring(parts[len].indexOf(':') + 1).trim();
+//    		System.out.println(value);
+//    		System.out.println(isValidString(value));
+    		if(isValidString(value)) {
+    			key = key.substring(1, key.length() - 1);
+    			value = value.substring(1, value.length() - 1);
+    			hm.put(key, value);
+    		} else
+    			throw new IOException();
+    	}
+    } catch(IndexOutOfBoundsException e) { 
+		throw new IOException();
+	}
     return new MyJSON(hm); 
   }
   

@@ -38,7 +38,7 @@ final class MyJSON implements JSON {
    */
   @Override
   public JSON getObject(String name) {
-	  if(this.hm.get(name).equals(null) || this.hm.get(name) instanceof String) 
+	  if(this.hm.get(name) instanceof String) 
 		  return null;
       return (JSON)this.hm.get(name);		
   }
